@@ -1,78 +1,66 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import MapView from 'react-native-maps'
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
-} from 'react-native';
+  Text,
+  View,
+  Alert
+} from 'react-native'
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Geolocation from '@react-native-community/geolocation'
+import { Height, Width } from './src/lib/Dimensions'
 
 function App() {
+  const [Locate, setLocate] = useState({})
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(info => setLocate(info.coords))
+  }, [])
+
+
   return (
     <>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar color='#fff' barStyle="dark-content" />
       <SafeAreaView>
+        <MapView
+          style={styles.map}
+          loadingEnabled={true}
+          showsUserLocation={true}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}>
+          <MapView.Marker
+            coordinate={{
+              "latitude": Locate.latitude,
+              "longitude": Locate.longitude
+            }}
+            title={"Your Location"}
+            draggable />
+        </MapView>
 
-      
+        <View style={styles.wrapper}>
+          <Text>
+            {Locate.altitude}
+          </Text>
+        </View>
       </SafeAreaView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  map: {
+    height: Height / 1.1
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+  wrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+})
 
 export default App;
