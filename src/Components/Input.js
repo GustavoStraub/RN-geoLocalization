@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   form: {
-    height: Height / 8
+    height: Height / 6
   }
 })
